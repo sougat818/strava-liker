@@ -6,6 +6,7 @@ import com.github.sougat818.stravaliker.dto.RelatedActivitiesDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,11 +22,11 @@ public class StravaAPIClient {
 
     @Value("${cookie}")
     private String cookie;
-
     public Flux<AthletesDTO> getRelatedActivities(String activityId) {
         log.info("Crawling {}", activityId);
         return webClient.get()
                 .uri(String.format("/feed/activity/%s/group_athletes", activityId))
+                .accept(MediaType.APPLICATION_JSON)
                 .header("x-csrf-token", token)
                 .header("cookie", cookie)
                 .retrieve()
